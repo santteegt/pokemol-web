@@ -18,6 +18,7 @@ export class MinionSafeService {
     this.safeProxyFactory = setupValues.safeProxyFactory;
     this.createAndAddModulesAddress = setupValues.createAndAddModules;
     this.safeMasterCopy = setupValues.safeMasterCopy;
+    this.moduleEnabler = setupValues.moduleEnabler;
     this.network = setupValues.network;
     this.safeProxyFactoryContract = new web3.eth.Contract(
       safeProxyFactoryAbi,
@@ -61,35 +62,10 @@ export class MinionSafeService {
     );
   }
 
-  createAndAddModulesData(dataArray) {
-    const ModuleDataWrapper = new this.web3.eth.Contract([
-      {
-        constant: false,
-        inputs: [{ name: 'data', type: 'bytes' }],
-        name: 'setup',
-        outputs: [],
-        payable: false,
-        stateMutability: 'nonpayable',
-        type: 'function',
-      },
-    ]);
-
-    // Remove method id (10) and position of data in payload (64)
-    return dataArray.reduce(
-      (acc, data) =>
-        acc +
-        ModuleDataWrapper.methods
-          .setup(data)
-          .encodeABI()
-          .substr(74),
-      '0x',
-    );
-  }
-
   async setup(delegateAddress, minionAddress, callback) {
     const Address0 = '0x'.padEnd(42, '0');
 
-    const threshhold = 2;
+    const threshold = 2;
     const mastercopy = this.safeMasterCopy;
 
     const cacheMinionSafe = {
@@ -101,20 +77,12 @@ export class MinionSafeService {
       .enableModule(minionAddress)
       .encodeABI();
 
-    const modulesCreationData = this.createAndAddModulesData([
-      enableModuleData,
-    ]);
-
-    const createAndAddModulesData = this.safeCreateAndAddModulesContract.methods
-      .createAndAddModules(this.safeProxyFactory, modulesCreationData)
-      .encodeABI();
-
     const setupData = await this.safe.methods
       .setup(
         [delegateAddress, minionAddress],
-        threshhold,
-        mastercopy,
-        createAndAddModulesData,
+        threshold,
+        this.moduleEnabler,
+        enableModuleData,
         Address0,
         Address0,
         0,
