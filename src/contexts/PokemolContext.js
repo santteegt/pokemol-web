@@ -27,6 +27,8 @@ const initialState = {
     newBoost: false,
     imageHandler: false,
     minionWithdraw: false,
+    daoToDaoProposal: false,
+    daoToDaoProposalType: false,
   },
 
   user: null,
@@ -112,8 +114,18 @@ const reducer = (state, action) => {
     }
     case 'closeModals': {
       const closeModals = {};
-      for (const modal in state.modals) {
-        closeModals[modal] = false;
+      if (action.payload !== undefined) {
+        for (const modal in state.modals) {
+          if (modal === action.payload) {
+            closeModals[modal] = false;
+          } else {
+            closeModals[modal] = state.modals[modal];
+          }
+        }
+      } else {
+        for (const modal in state.modals) {
+          closeModals[modal] = false;
+        }
       }
       return { ...state, modals: closeModals };
     }
@@ -211,8 +223,8 @@ function PokemolContextProvider(props) {
     dispatch({ type: 'openModal', payload: data });
   }, []);
 
-  const closeModals = useCallback(() => {
-    dispatch({ type: 'closeModals' });
+  const closeModals = useCallback((data) => {
+    dispatch({ type: 'closeModals', payload: data });
   }, []);
 
   const clearDaoData = useCallback((data) => {

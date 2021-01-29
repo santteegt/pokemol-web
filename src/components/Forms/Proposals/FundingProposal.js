@@ -13,7 +13,7 @@ import {
   MenuList,
   MenuItem,
 } from '@chakra-ui/react';
-import TextBox from '../Shared/TextBox';
+import TextBox from '../../Shared/TextBox';
 import { utils } from 'web3';
 import { RiAddFill, RiErrorWarningLine } from 'react-icons/ri';
 
@@ -22,13 +22,13 @@ import {
   useModals,
   useTxProcessor,
   useUser,
-} from '../../contexts/PokemolContext';
+} from '../../../contexts/PokemolContext';
 
-import TributeInput from './TributeInput';
-import PaymentInput from './PaymentInput';
-import AddressInput from './AddressInput';
-import DetailsFields from './DetailFields';
-import { detailsToJSON } from '../../utils/proposal-helper';
+import TributeInput from '../Shared/TributeInput';
+import PaymentInput from '../Shared/PaymentInput';
+import AddressInput from '../Shared/AddressInput';
+import DetailsFields from '../Shared/DetailFields';
+import { detailsToJSON } from '../../../utils/proposal-helper';
 
 const FundingProposalForm = ({ presets }) => {
   const [loading, setLoading] = useState(false);

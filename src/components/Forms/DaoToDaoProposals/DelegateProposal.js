@@ -7,51 +7,38 @@ import {
   Flex,
   Input,
   Icon,
+  Image,
   Box,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
 } from '@chakra-ui/react';
 import { utils } from 'web3';
-import { RiAddFill, RiErrorWarningLine } from 'react-icons/ri';
+import { RiErrorWarningLine } from 'react-icons/ri';
+import DAOHaus from '../../../assets/Daohaus__Castle--Dark.svg';
 
 import {
   useDao,
   useTxProcessor,
   useUser,
-  useMemberWallet,
   useModals,
-} from '../../contexts/PokemolContext';
-import TextBox from '../Shared/TextBox';
+} from '../../../contexts/PokemolContext';
+import TextBox from '../../Shared/TextBox';
+import DetailsFields from '../Shared/DetailFields';
+import AddressInput from '../Shared/AddressInput';
+import { detailsToJSON } from '../../../utils/proposal-helper';
+import DelegateMenu from '../../Shared/DelegateMenu';
 
-import PaymentInput from './PaymentInput';
-import TributeInput from './TributeInput';
-import AddressInput from './AddressInput';
-import DetailsFields from './DetailFields';
-import { detailsToJSON } from '../../utils/proposal-helper';
+// TODO pass delegate to delegate menu
+// TODO replace delegate with user avatar
+// TODO sort out term limits, emergency recall
 
-const MemberProposalForm = () => {
+const StakeProposalForm = () => {
   const [loading, setLoading] = useState(false);
-  const [showLoot, setShowLoot] = useState(false);
-  const [showPaymentRequest, setShowPaymentRequest] = useState(false);
-  const [showApplicant, setShowApplicant] = useState(false);
   const [user] = useUser();
-  const [memberWallet] = useMemberWallet();
   const [dao] = useDao();
   const [txProcessor, updateTxProcessor] = useTxProcessor();
   const [currentError, setCurrentError] = useState(null);
   const { closeModals } = useModals();
 
-  const {
-    handleSubmit,
-    errors,
-    register,
-    setValue,
-    getValues,
-    watch,
-    // formState
-  } = useForm();
+  const { handleSubmit, errors, register, setValue, watch } = useForm();
 
   useEffect(() => {
     if (Object.keys(errors).length > 0) {
@@ -125,98 +112,44 @@ const MemberProposalForm = () => {
           <DetailsFields register={register} />
         </Box>
         <Box w={['100%', null, '50%']}>
+          <TextBox size='xs' htmlFor='name' mb={2}>
+            Current Delegate
+          </TextBox>
+          <Flex w='60%' align='center' justify='space-between' pb={3}>
+            <Image src={DAOHaus} w='40px' h='40px' />
+            <Box fontFamily='heading' fontWeight={900}>
+              takashi.eth
+            </Box>
+            <DelegateMenu />
+          </Flex>
+
+          <AddressInput
+            name='delegate'
+            formLabel='Delegate Address'
+            register={register}
+            setValue={setValue}
+            watch={watch}
+          />
           <TextBox as={FormLabel} size='xs' htmlFor='name' mb={2}>
-            Shares Requested
+            Term
           </TextBox>
           <Input
-            name='sharesRequested'
+            name='delegateTerm'
             placeholder='0'
             mb={5}
             ref={register({
               required: {
                 value: true,
-                message: 'Requested shares are required for Member Proposals',
+                message: 'Delegate term is required for Delegate Proposals',
               },
               pattern: {
                 value: /[0-9]/,
-                message: 'Requested shares must be a number',
+                message: 'Term must be a number in months',
               },
             })}
             color='white'
             focusBorderColor='secondary.500'
           />
-          <TributeInput
-            register={register}
-            setValue={setValue}
-            getValues={getValues}
-          />
-          {showLoot && (
-            <>
-              <TextBox as={FormLabel} size='xs' htmlFor='lootRequested' mb={2}>
-                Loot Requested
-              </TextBox>
-              <Input
-                name='lootRequested'
-                placeholder='0'
-                mb={5}
-                ref={register({
-                  pattern: {
-                    value: /[0-9]/,
-                    message: 'Loot must be a number',
-                  },
-                })}
-                color='white'
-                focusBorderColor='secondary.500'
-              />
-            </>
-          )}
-          {showPaymentRequest && (
-            <PaymentInput
-              name='paymentRequested'
-              register={register}
-              setValue={setValue}
-              getValues={getValues}
-              errors={errors}
-            />
-          )}
-          {showApplicant && (
-            <AddressInput
-              name='applicant'
-              register={register}
-              setValue={setValue}
-              watch={watch}
-              member={true}
-              newMember={!memberWallet.activeMember && true}
-            />
-          )}
-          {(!showApplicant || !showLoot || !showPaymentRequest) && (
-            <Menu color='white' textTransform='uppercase'>
-              <MenuButton
-                as={Button}
-                variant='outline'
-                rightIcon={<Icon as={RiAddFill} />}
-              >
-                Additional Options
-              </MenuButton>
-              <MenuList>
-                {!showApplicant && (
-                  <MenuItem onClick={() => setShowApplicant(true)}>
-                    Applicant
-                  </MenuItem>
-                )}
-                {!showLoot && (
-                  <MenuItem onClick={() => setShowLoot(true)}>
-                    Request Loot
-                  </MenuItem>
-                )}
-                {!showPaymentRequest && (
-                  <MenuItem onClick={() => setShowPaymentRequest(true)}>
-                    Request Payment
-                  </MenuItem>
-                )}
-              </MenuList>
-            </Menu>
-          )}
         </Box>
       </FormControl>
       <Flex justify='flex-end' align='center' h='60px'>
@@ -241,4 +174,4 @@ const MemberProposalForm = () => {
   );
 };
 
-export default MemberProposalForm;
+export default StakeProposalForm;
