@@ -7,47 +7,9 @@ import ContentBox from '../../components/Shared/ContentBox';
 import TextBox from '../../components/Shared/TextBox';
 import GenericModal from '../../components/Modal/GenericModal';
 import { useDao, useModals } from '../../contexts/PokemolContext';
-import NewMinionForm from '../../components/Settings/NewMinionForm';
-import CustomThemeLaunch from '../../components/Settings/CustomThemeLaunch';
-import NewMinionSafe from '../../components/Settings/NewMinionSafe';
 
-const boostList = [
-  {
-    name: 'Custom Theme',
-    key: 'customTheme',
-    description: 'Customize the visual theme of your community',
-    price: '0',
-    modalName: 'newCustomTheme',
-    modalBody: <CustomThemeLaunch />,
-  },
-  {
-    name: 'Minion',
-    key: 'vanillaMinions',
-    description: 'Create and vote on execution of external contracts',
-    comingSoon: false,
-    price: '0',
-    modalName: 'newBoost',
-    modalBody: <NewMinionForm />,
-  },
-  {
-    name: 'Minion Safe',
-    key: 'minionSafe',
-    description: 'Add the Dao to a Gnosis Safe',
-    comingSoon: false,
-    price: '0',
-    modalName: 'newMinionSafe',
-    modalBody: <NewMinionSafe />,
-    dependency: 'vanillaMinions',
-  },
-  {
-    name: 'Notifications',
-    key: 'notifications',
-    description:
-      'Customize and send notifications of DAO activity to your social channels',
-    comingSoon: true,
-    price: '0',
-  },
-];
+import { boostList } from '../../content/boost-content';
+import BoostLaunchWrapper from '../../components/Settings/BoostLaunchWrapper';
 
 const hasDependentBoost = (dao, boostKey) => {
   if (boostKey === 'vanillaMinions') {
@@ -129,7 +91,13 @@ const Boosts = () => {
           </>
         )}
         <GenericModal isOpen={modals[boost.modalName]}>
-          {boost.modalBody}
+          <>
+            {!boost.comingSoon ? (
+              <>
+                <BoostLaunchWrapper boost={boost} />
+              </>
+            ) : null}
+          </>
         </GenericModal>
       </ContentBox>
     );

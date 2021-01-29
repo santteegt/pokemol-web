@@ -179,7 +179,6 @@ const UserDaoInit = () => {
     let daoRes;
     try {
       daoRes = await get(`dao/${daoParam}`);
-      console.log('daoRes', daoRes);
     } catch (err) {
       console.log('api fetch error', daoParam);
     }
@@ -251,11 +250,6 @@ const UserDaoInit = () => {
     const allowance = contracts.daoService.web3.utils.fromWei(allowanceWei);
     const member = await contracts.daoService.moloch.members(addrByDelegateKey);
     const shares = parseInt(member.shares) || 0;
-    const loot = parseInt(member.loot) || 0;
-    const jailed = parseInt(member.jailed) || 0;
-    const highestIndexYesVote = member.highestIndexYesVote;
-    let eth = 0;
-    eth = await contracts.daoService.getAccountEth();
 
     const wallet = {
       daoAddress: contracts.daoService.daoAddress,
@@ -263,12 +257,7 @@ const UserDaoInit = () => {
       memberAddress: user.username,
       tokenBalance,
       allowance,
-      eth,
-      loot,
-      highestIndexYesVote,
-      jailed,
       shares,
-      addrByDelegateKey,
     };
 
     updateMemberWallet(wallet);

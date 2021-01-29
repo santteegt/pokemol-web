@@ -24,6 +24,7 @@ import RegisterDao from './views/Summon/RegisterDao';
 import Minions from './components/Settings/Minions';
 import MinionSafe from './components/Settings/MinionSafe';
 import Explore from './views/Explore/Explore';
+import ExplorWrapper from './views/Explore/ExploreWrapper';
 
 const Routes = () => {
   return (
@@ -125,7 +126,7 @@ const Routes = () => {
           exact
           component={DaoTheme}
         />
-        <Route path='/explore' exact component={Explore} />
+        <Route path='/explore' exact component={ExplorWrapper} />
         <Route path='/summon' exact component={SummonWrapper} />
         <Route exact path='/' component={Hub} />
         <Route path='*' component={FourOhFour} />

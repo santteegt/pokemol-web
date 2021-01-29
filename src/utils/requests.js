@@ -1,7 +1,8 @@
 const metadataApiUrl = 'https://data.daohaus.club';
-const geckoURL = 'https://api.coingecko.com/api/v3/simple/token_price';
 const uniswapGhList = 'https://raw.githubusercontent.com';
 const apiMetadataUrl = 'https://daohaus-metadata.s3.amazonaws.com/daoMeta.json';
+const apiPricedataUrl =
+  'https://daohaus-metadata.s3.amazonaws.com/daoTokenPrices.json';
 
 export const get = async (endpoint) => {
   const url = `${metadataApiUrl}/${endpoint}`;
@@ -47,20 +48,12 @@ export const put = async (endpoint, data) => {
   }
 };
 
-export const getUsd = async (tokenAddress) => {
-  const url = `${geckoURL}/ethereum?contract_addresses=${tokenAddress}&vs_currencies=usd`;
-  try {
-    const response = await fetch(url);
-    return response.json();
-  } catch (err) {
-    throw new Error(err);
-  }
-};
-
 export const getMainetAddresses = async () => {
   const url = `${uniswapGhList}/Uniswap/default-token-list/master/src/tokens/mainnet.json`;
   try {
     const response = await fetch(url);
+
+    console.log('');
     return response.json();
   } catch (err) {
     throw new Error(err);
@@ -137,6 +130,15 @@ export const getApiGnosis = async (networkName, endpoint) => {
   const apiGnosisUrl = `https://safe-transaction.${networkName}.gnosis.io/api/v1/${endpoint}`;
   try {
     const response = await fetch(apiGnosisUrl);
+    return response.json();
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+export const getApiPriceData = async () => {
+  try {
+    const response = await fetch(apiPricedataUrl);
     return response.json();
   } catch (err) {
     throw new Error(err);

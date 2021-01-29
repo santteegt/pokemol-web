@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import { Box, Flex, Link, Spinner } from '@chakra-ui/react';
 
 import { useUser } from '../../contexts/PokemolContext';
@@ -72,13 +73,13 @@ const Hub = () => {
                         <Box w='100%'>
                           <MemberDaoList label={'MEMBER OF'} daos={localDaos} />
                           <Link
-                            href='https://daohaus.club/explore'
-                            isExternal
+                            as={RouterLink}
+                            to='/explore'
                             fontSize='md'
                             textTransform='uppercase'
                             color='secondary.500'
                           >
-                            Explore more DAOs on DAOhaus
+                            Explore more DAOs
                           </Link>
                         </Box>
                       ) : null}
@@ -111,13 +112,13 @@ const Hub = () => {
                           <TextBox ml='15px'>Your daos will show here</TextBox>
                         </Flex>
                         <Link
-                          href='https://daohaus.club/explore'
-                          isExternal
+                          as={RouterLink}
+                          to='/explore'
                           fontSize='md'
                           textTransform='uppercase'
                           color='secondary.500'
                         >
-                          Explore more DAOs on DAOhaus
+                          Explore more DAOs
                         </Link>
                       </Box>
                     </ContentBox>
@@ -133,7 +134,7 @@ const Hub = () => {
                 <Box
                   fontSize='md'
                   fontFamily='heading'
-                  textTransform='uppercase'
+                  texttransform='uppercase'
                   fontWeight={700}
                 >
                   Recent Activity
