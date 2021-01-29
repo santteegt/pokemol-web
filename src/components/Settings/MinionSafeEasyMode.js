@@ -8,8 +8,9 @@ import {
 } from '@chakra-ui/react';
 import TextBox from '../Shared/TextBox';
 import { useForm } from 'react-hook-form';
-import AddressInput from '../Forms/AddressInput';
+
 import { truncateAddr } from '../../utils/helpers';
+import AddressInput from '../Forms/Shared/AddressInput';
 
 const MinionSafeEasyMode = ({ minions, submitAction, loading }) => {
   const { handleSubmit, register, setValue, watch } = useForm();

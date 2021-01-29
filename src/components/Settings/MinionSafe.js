@@ -192,8 +192,9 @@ const MinionSafe = () => {
       );
       setSafes(intersection);
     };
-
-    if (!network || !pendingMinionSafe || !dao?.graphData?.minions) {
+    console.log(network, pendingMinionSafe, dao?.graphData?.minions);
+    if (!network || !dao?.graphData?.minions) {
+      console.log('bla');
       return;
     }
     if (safeAddress) {
@@ -268,35 +269,37 @@ const MinionSafe = () => {
                   <TextBox>Transactions</TextBox>
                   <OrderedList>
                     {currentSafeDetails.allTransactions &&
-                      currentSafeDetails.allTransactions.reverse().map((tx) => (
-                        <ListItem key={tx.txHash || tx.safeTxHash}>
-                          {tx.transfers.length ? (
-                            <>
-                              {tx.transfers[0].type}{' '}
-                              {tx.transfers[0].value &&
-                                utils.fromWei(tx.transfers[0].value)}{' '}
-                              in
-                            </>
-                          ) : (
-                            <>
-                              {tx.txType} {utils.fromWei(tx.value)} to{' '}
-                              {truncateAddr(tx.to)}{' '}
-                              <Button
-                                onClick={() =>
-                                  submitProposal(
-                                    dao.graphData.minions[0].minionAddress,
-                                    daoMetadata.boosts.minionSafe.metadata
-                                      .safeAddress,
-                                    tx,
-                                  )
-                                }
-                              >
-                                Submit Proposal
-                              </Button>
-                            </>
-                          )}
-                        </ListItem>
-                      ))}
+                      currentSafeDetails.allTransactions
+                        .reverse()
+                        .map((tx, idx) => (
+                          <ListItem key={tx.txHash || tx.safeTxHash || idx}>
+                            {tx.transfers.length ? (
+                              <>
+                                {tx.transfers[0].type}{' '}
+                                {tx.transfers[0].value &&
+                                  utils.fromWei(tx.transfers[0].value)}{' '}
+                                in
+                              </>
+                            ) : (
+                              <>
+                                {tx.txType} {utils.fromWei(tx.value)} to{' '}
+                                {truncateAddr(tx.to)}{' '}
+                                <Button
+                                  onClick={() =>
+                                    submitProposal(
+                                      dao.graphData.minions[0].minionAddress,
+                                      daoMetadata.boosts.minionSafe.metadata
+                                        .safeAddress,
+                                      tx,
+                                    )
+                                  }
+                                >
+                                  Submit Proposal
+                                </Button>
+                              </>
+                            )}
+                          </ListItem>
+                        ))}
                   </OrderedList>
                   <TextBox>Balances</TextBox>
                   <List>
