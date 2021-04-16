@@ -3,6 +3,7 @@ import { Box } from '@chakra-ui/react';
 
 import CustomThemeLaunch from './customThemeLaunch';
 import NewMinionForm from '../forms/newMinion';
+import NewSuperfluidMinionForm from '../forms/newSuperfluidMinion';
 import NotificationsLaunch from './notificationsLaunch';
 import ProposalTypesLaunch from './ProposalTypesLaunch';
 import { useParams } from 'react-router-dom';
@@ -33,6 +34,9 @@ const BoostLaunchWrapper = ({ boost }) => {
       }
       case 'vanillaMinion': {
         return <NewMinionForm />;
+      }
+      case 'superfluidMinion': {
+        return <NewSuperfluidMinionForm />;
       }
       case 'minionSafe': {
         return <NewMinionSafe />;

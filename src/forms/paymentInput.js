@@ -13,7 +13,16 @@ import TextBox from '../components/TextBox';
 import React, { useState, useEffect } from 'react';
 import { useDao } from '../contexts/DaoContext';
 
-const PaymentInput = ({ register, setValue, getValues, errors }) => {
+const defaultTipLabel = 'Request funds from the DAO';
+
+const PaymentInput = ({
+  errors,
+  formLabel = 'Payment Requested',
+  getValues,
+  register,
+  setValue,
+  tipLabel = defaultTipLabel,
+}) => {
   const [balance, setBalance] = useState(0);
 
   const [tokenData, setTokenData] = useState([]);
@@ -74,6 +83,9 @@ const PaymentInput = ({ register, setValue, getValues, errors }) => {
 
   const validateBalance = (value) => {
     let error;
+    if (value <= 0) {
+      error = 'Payment Requested must be greater than zero';
+    }
     if (value > balance) {
       error = 'Payment Requested is more than the dao has';
     }
@@ -82,14 +94,9 @@ const PaymentInput = ({ register, setValue, getValues, errors }) => {
 
   return (
     <>
-      <Tooltip
-        hasArrow
-        shouldWrapChildren
-        label='Request funds from the DAO'
-        placement='top'
-      >
+      <Tooltip hasArrow shouldWrapChildren label={tipLabel} placement='top'>
         <TextBox as={FormLabel} size='xs' d='flex' alignItems='center'>
-          Payment Requested <RiInformationLine style={{ marginLeft: 5 }} />
+          {formLabel} <RiInformationLine style={{ marginLeft: 5 }} />
         </TextBox>
       </Tooltip>
       <InputGroup>

@@ -13,6 +13,7 @@ import { TokenService } from '../services/tokenService';
 import { MEMBERS_LIST, MEMBER_DELEGATE_KEY } from '../graphQL/member-queries';
 import { UBERHAUS_MEMBER_DELEGATE } from '../graphQL/uberhaus-queries';
 import { MinionService } from '../services/minionService';
+import { SuperfluidMinionService } from '../services/superfluidMinionService';
 import { UberHausMinionService } from '../services/uberHausMinionService';
 
 export const pollProposals = async ({ daoID, chainID }) =>
@@ -97,6 +98,12 @@ export const pollMinionExecute = async ({
         chainID,
       })('getAction')({ proposalId });
       return action.executed;
+    } else if (proposalType === PROPOSAL_TYPES.MINION_SUPERFLUID) {
+      const action = await SuperfluidMinionService({
+        minion: minionAddress,
+        chainID,
+      })('getStream')({ proposalId });
+      return action.executed;
     } else if (
       proposalType === PROPOSAL_TYPES.MINION_UBER_STAKE ||
       proposalType === PROPOSAL_TYPES.MINION_UBER_RQ
@@ -113,6 +120,26 @@ export const pollMinionExecute = async ({
         chainID,
       })('getAppointment')({ proposalId });
       return action.executed;
+    }
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error caught in Poll block of TX');
+  }
+};
+
+export const pollMinionCancel = async ({
+  chainID,
+  minionAddress,
+  proposalId,
+  proposalType,
+}) => {
+  try {
+    if (proposalType === PROPOSAL_TYPES.MINION_SUPERFLUID) {
+      const action = await SuperfluidMinionService({
+        minion: minionAddress,
+        chainID,
+      })('getStream')({ proposalId });
+      return !action.active;
     }
   } catch (error) {
     console.error(error);
